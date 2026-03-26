@@ -113,7 +113,7 @@ Search the web thoroughly. Start by searching for the company name directly, the
     let raw = textBlock.text.trim();
     raw = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
 
-    let brief; try { brief = JSON.parse(raw); } catch(e) { brief = { company: company, tagline: "Limited public information available.", stage: "Unknown", sector: "Unknown", hq: "Unknown", founded: "Unknown", sections: {}, verdict: "Insufficient public information found." }; ["business","team","funding","market","news"].forEach(id => { brief.sections[id] = { bullets: ["No public information found."] }; }); } return res.json({ brief });
+    let brief; try { brief = JSON.parse(raw); } catch(e) { brief = { company: company, tagline: "Limited public information available.", stage: "Unknown", sector: "Unknown", hq: "Unknown", founded: "Unknown", sections: { business: { bullets: ["No public information found."] }, team: { bullets: ["No public information found."] }, funding: { bullets: ["No public information found."] }, market: { bullets: ["No public information found."] }, news: { bullets: ["No public information found."] } }, verdict: "Insufficient public information found to produce a meaningful brief." }; } return res.json({ brief });
 
   } catch (err) {
     console.error('Server error:', err);
