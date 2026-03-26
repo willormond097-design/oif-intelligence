@@ -113,8 +113,7 @@ Search the web thoroughly. Be specific with numbers, dates, and names wherever p
     let raw = textBlock.text.trim();
     raw = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
 
-    const brief = JSON.parse(raw);
-    return res.json({ brief });
+    let brief; try { brief = JSON.parse(raw); } catch(e) { brief = { company: company, tagline: "Limited public information available.", stage: "Unknown", sector: "Unknown", hq: "Unknown", founded: "Unknown", sections: {}, verdict: "Insufficient public information found." }; ["business","team","funding","market","news"].forEach(id => { brief.sections[id] = { bullets: ["No public information found."] }; }); } return res.json({ brief });
 
   } catch (err) {
     console.error('Server error:', err);
