@@ -11,83 +11,43 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
+  res.json({ status: 'ok' });
 });
 
-// Main brief generation endpoint
 app.post('/api/brief', async (req, res) => {
   const { company, sections } = req.body;
-
-  if (!company || !sections || !sections.length) {
-    return res.status(400).json({ error: 'Missing company or sections.' });
-  }
-
+  if (!company || !sections || !sections.length) return res.status(400).json({ error: 'Missing company or sections.' });
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured on server.' });
-  }
+  if (!apiKey) return res.status(500).json({ error: 'API key not configured.' });
 
   const sectionDescriptions = {
-    business: 'What the company does and their business model (product, revenue model, target customers, stage)',
-    team:     'Founding team and key people (backgrounds, previous companies, LinkedIn signals, notable hires)',
-    funding:  'Funding history and investors (rounds, amounts, lead investors, total raised, valuation if known)',
-    market:   'Competitors and market context (main competitors, market size, positioning, differentiation)',
-    news:     'Recent news and signals (last 12 months: product launches, hires, partnerships, press, red flags)',
+    business: 'What the company does and their business model',
+    team: 'Founding team and key people',
+    funding: 'Funding history and investors',
+    market: 'Competitors and market context',
+    news: 'Recent news and signals (last 12 months)',
   };
 
-  const sectionDesc = sections
-    .map(s => sectionDescriptions[s])
-    .filter(Boolean)
-    .join('\n');
+  const sectionDesc = sections.map(s => sectionDescriptions[s]).filter(Boolean).join('\n');
 
-  const systemPrompt = `You are an expert venture capital analyst at OIF Ventures, a leading Australian early-stage VC firm. Your job is to produce fast, sharp, high-signal company intelligence briefs that give analysts everything they need to decide whether to pursue a deal.
+  const systemPrompt = `You are a VC analyst at OIF Ventures. Produce company intelligence briefs.
 
-When researching a company, you:
-- Search the web for current, accurate information
-- Prioritise primary sources (company website, Crunchbase, LinkedIn, recent press)
-- Are concise but thorough — no padding, no obvious statements
-- Flag anything uncertain with (unconfirmed) or (approx.)
-- Surface non-obvious insights a junior analyst might miss
+CRITICAL: Always return ONLY a valid JSON object. No markdown, no explanation, just raw JSON.
 
-You MUST respond with a valid JSON object ONLY — no markdown, no preamble, no backticks.
+For any company — large or small — search their website, LinkedIn, Crunchbase, and press. Extract whatever exists publicly. If a section has no data, use exactly: "No public information found."
 
-The JSON schema is:
-{
-  "company": "Exact company name",
-  "tagline": "One crisp sentence describing what they do",
-  "stage": "e.g. Series A / Seed / Pre-seed / Growth",
-  "sector": "e.g. SaaS / Fintech / Healthtech",
-  "hq": "City, Country",
-  "founded": "Year or approx. year",
-  "sections": {
-    "business": { "bullets": ["...", "..."] },
-    "team":     { "bullets": ["...", "..."] },
-    "funding":  { "bullets": ["...", "..."] },
-    "market":   { "bullets": ["...", "..."] },
-    "news":     { "bullets": ["...", "..."] }
-  },
-  "verdict": "2-3 sentence analyst take: what is interesting, what is the risk, worth pursuing?"
-}
+Return this exact JSON structure:
+{"company":"name","tagline":"one sentence or Unknown","stage":"stage or Unknown","sector":"sector or Unknown","hq":"city country or Unknown","founded":"year or Unknown","sections":{"business":{"bullets":["..."]},"team":{"bullets":["..."]},"funding":{"bullets":["..."]},"market":{"bullets":["..."]},"news":{"bullets":["..."]}},"verdict":"analyst take or Unknown"}
 
-Only include keys in sections for the sections requested. Each section should have 4-6 tight, high-signal bullet points. The verdict should be genuinely opinionated. IMPORTANT: If you cannot find information for a section, still include that section but use a single bullet point saying "No public information found." Never return an error or incomplete JSON — always return the full schema with every requested section included.`;
+Only include requested sections. Every section needs at least one bullet.`;
 
-  const userPrompt = `Research and produce a company intelligence brief for: ${company}
-
-Sections to include:
-${sectionDesc}
-
-Search the web thoroughly. Start by searching for the company name directly, then visit their website if found. Even for small or unknown companies, try to find: their website, LinkedIn page, founder profiles, and any press mentions. Extract whatever is publicly available. Be specific with numbers, dates, and names. Flag anything uncertain. If truly nothing exists, say so — but always try the website first.`;
+  const userPrompt = `Brief for: ${company}\nSections: ${sectionDesc}\n\nSearch for "${company}", visit their website, check LinkedIn. Return valid JSON only.`;
 
   try {
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4000,
@@ -96,36 +56,30 @@ Search the web thoroughly. Start by searching for the company name directly, the
         messages: [{ role: 'user', content: userPrompt }],
       }),
     });
+    const data = await r.json();
+    if (!r.ok) return res.status(500).json({ error: data.error?.message || 'Anthropic API error.' });
 
-    const data = await anthropicRes.json();
-
-    if (!anthropicRes.ok) {
-      console.error('Anthropic error:', data);
-      return res.status(500).json({ error: data.error?.message || 'Anthropic API error.' });
-    }
-
-    // Find the final text block (comes after any tool use blocks)
     const textBlock = data.content?.find(b => b.type === 'text');
-    if (!textBlock) {
-      return res.status(500).json({ error: 'No text response returned from model.' });
+    if (!textBlock) return res.status(500).json({ error: 'No response from model.' });
+
+    let raw = textBlock.text.trim().replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (jsonMatch) raw = jsonMatch[0];
+
+    let brief;
+    try {
+      brief = JSON.parse(raw);
+    } catch (e) {
+      brief = { company, tagline: 'Limited public information available.', stage: 'Unknown', sector: 'Unknown', hq: 'Unknown', founded: 'Unknown', sections: {}, verdict: 'Insufficient public information found.' };
+      sections.forEach(id => { brief.sections[id] = { bullets: ['No public information found.'] }; });
     }
+    sections.forEach(id => { if (!brief.sections) brief.sections = {}; if (!brief.sections[id]) brief.sections[id] = { bullets: ['No public information found.'] }; });
 
-    let raw = textBlock.text.trim();
-    raw = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
-
-    let brief; try { brief = JSON.parse(raw); } catch(e) { brief = { company: company, tagline: "Limited public information available.", stage: "Unknown", sector: "Unknown", hq: "Unknown", founded: "Unknown", sections: { business: { bullets: ["No public information found."] }, team: { bullets: ["No public information found."] }, funding: { bullets: ["No public information found."] }, market: { bullets: ["No public information found."] }, news: { bullets: ["No public information found."] } }, verdict: "Insufficient public information found to produce a meaningful brief." }; } return res.json({ brief });
-
+    return res.json({ brief });
   } catch (err) {
-    console.error('Server error:', err);
-    return res.status(500).json({ error: err.message || 'Unexpected server error.' });
+    return res.status(500).json({ error: err.message || 'Server error.' });
   }
 });
 
-// Catch-all: serve frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`OIF Intelligence running on port ${PORT}`);
-});
+app.get('*', (req, res) => { res.sendFile(path.join(__dirname, '../public/index.html')); });
+app.listen(PORT, () => { console.log(`OIF Intelligence running on port ${PORT}`); });
