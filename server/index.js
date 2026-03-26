@@ -71,7 +71,7 @@ The JSON schema is:
   "verdict": "2-3 sentence analyst take: what is interesting, what is the risk, worth pursuing?"
 }
 
-Only include keys in sections for the sections requested. Each section should have 4-6 tight, high-signal bullet points. The verdict should be genuinely opinionated.`;
+Only include keys in sections for the sections requested. Each section should have 4-6 tight, high-signal bullet points. The verdict should be genuinely opinionated. IMPORTANT: If you cannot find information for a section, still include that section but use a single bullet point saying "No public information found." Never return an error or incomplete JSON — always return the full schema with every requested section included.`;
 
   const userPrompt = `Research and produce a company intelligence brief for: ${company}
 
