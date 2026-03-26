@@ -78,7 +78,7 @@ Only include keys in sections for the sections requested. Each section should ha
 Sections to include:
 ${sectionDesc}
 
-Search the web thoroughly. Be specific with numbers, dates, and names wherever possible. Flag anything uncertain.`;
+Search the web thoroughly. Start by searching for the company name directly, then visit their website if found. Even for small or unknown companies, try to find: their website, LinkedIn page, founder profiles, and any press mentions. Extract whatever is publicly available. Be specific with numbers, dates, and names. Flag anything uncertain. If truly nothing exists, say so — but always try the website first.`;
 
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
