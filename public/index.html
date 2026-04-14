@@ -5,41 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OIF Intelligence — Company Brief</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0a0b0d;
-      --surface:   #111316;
-      --border:    #1f2228;
-      --border-hi: #2e3340;
-      --accent:    #c8f04e;
-      --accent-dim:#8aaa2e;
-      --text:      #e8eaf0;
-      --muted:     #6b7280;
-      --danger:    #ff4d6d;
-      --info:      #60b8ff;
+      --bg: #f7f8fa;
+      --white: #ffffff;
+      --surface: #ffffff;
+      --border: #e5e7eb;
+      --border-hi: #d1d5db;
+      --accent: #1e3a5f;
+      --accent-light: #eef2f7;
+      --text: #111827;
+      --text-secondary: #4b5563;
+      --muted: #9ca3af;
+      --danger: #dc2626;
+      --green: #16a34a;
     }
 
     html, body {
       height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       font-size: 15px;
       line-height: 1.6;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
     }
 
     .shell {
@@ -52,38 +43,36 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 40px;
+      padding: 16px 36px;
       border-bottom: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--white);
     }
 
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.05rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
     }
 
     .logo-mark {
       width: 28px; height: 28px;
       background: var(--accent);
-      border-radius: 4px;
+      border-radius: 6px;
       display: grid;
       place-items: center;
     }
 
-    .badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .header-badge {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem;
+      
+      
       padding: 4px 10px;
-      border: 1px solid var(--border-hi);
-      border-radius: 3px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
       color: var(--muted);
     }
 
@@ -95,32 +84,33 @@
 
     aside {
       border-right: 1px solid var(--border);
-      padding: 36px 32px;
+      padding: 36px 28px;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 24px;
+      background: var(--white);
     }
 
     .sidebar-title {
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 1.15rem;
-      line-height: 1.3;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
     }
 
     .sidebar-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-size: 0.84rem;
+      color: var(--text-secondary);
       margin-top: 6px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     label {
       display: block;
-      font-family: 'DM Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      
+      
       color: var(--muted);
       margin-bottom: 8px;
     }
@@ -128,43 +118,47 @@
     input[type="text"] {
       width: 100%;
       background: var(--bg);
-      border: 1px solid var(--border-hi);
-      border-radius: 6px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
       padding: 11px 14px;
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(30,58,95,0.08);
+    }
+
     input::placeholder { color: var(--muted); }
 
-    .toggles { display: flex; flex-direction: column; gap: 8px; }
+    .toggles { display: flex; flex-direction: column; gap: 6px; }
 
     .toggle {
       display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
-      padding: 8px 10px;
-      border-radius: 5px;
+      padding: 9px 12px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       transition: border-color 0.15s, background 0.15s;
       user-select: none;
     }
 
-    .toggle:hover { border-color: var(--border-hi); }
+    .toggle:hover { border-color: var(--border-hi); background: var(--bg); }
     .toggle.active {
-      border-color: var(--accent-dim);
-      background: rgba(200,240,78,0.05);
+      border-color: var(--accent);
+      background: var(--accent-light);
     }
 
     .toggle-box {
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
       border: 1.5px solid var(--border-hi);
-      border-radius: 3px;
+      border-radius: 4px;
       flex-shrink: 0;
       display: grid;
       place-items: center;
@@ -179,32 +173,30 @@
     .toggle.active .toggle-box::after {
       content: '';
       width: 7px; height: 5px;
-      border-left: 1.5px solid #000;
-      border-bottom: 1.5px solid #000;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
       transform: rotate(-45deg) translateY(-1px);
       display: block;
     }
 
-    .toggle-label { font-size: 0.83rem; color: var(--text); }
+    .toggle-label { font-size: 0.84rem; color: var(--text); }
 
     .btn-generate {
       width: 100%;
       padding: 13px;
       background: var(--accent);
-      color: #0a0b0d;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: opacity 0.2s, transform 0.1s;
       margin-top: auto;
     }
 
-    .btn-generate:hover { opacity: 0.88; }
+    .btn-generate:hover { opacity: 0.9; }
     .btn-generate:active { transform: scale(0.98); }
     .btn-generate:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 
@@ -219,36 +211,36 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 14px;
+      gap: 12px;
       color: var(--muted);
       text-align: center;
     }
 
     .empty-icon {
-      width: 64px; height: 64px;
-      border: 1px solid var(--border-hi);
-      border-radius: 50%;
+      width: 56px; height: 56px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
       display: grid;
       place-items: center;
       margin-bottom: 6px;
+      background: var(--white);
     }
 
     .empty-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 1rem;
       color: var(--text);
     }
 
-    .empty-sub { font-size: 0.82rem; max-width: 260px; line-height: 1.5; }
+    .empty-sub { font-size: 0.84rem; max-width: 260px; line-height: 1.55; }
 
     .loading-state { display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
 
     .loading-label {
-      font-family: 'DM Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      
+      
       color: var(--accent);
       margin-bottom: 4px;
     }
@@ -279,7 +271,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       color: var(--muted);
       opacity: 0;
       transform: translateY(4px);
@@ -297,8 +289,8 @@
       transition: background 0.3s;
     }
 
-    .step.active .step-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-    .step.done .step-dot { background: var(--accent-dim); }
+    .step.active .step-dot { background: var(--accent); }
+    .step.done .step-dot { background: var(--green); }
 
     .brief-header {
       border-bottom: 1px solid var(--border);
@@ -307,38 +299,38 @@
     }
 
     .brief-company {
-      font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 2rem;
+      font-size: 1.8rem;
       letter-spacing: -0.02em;
-      line-height: 1.1;
+      line-height: 1.15;
+      color: var(--text);
     }
 
     .brief-meta {
       display: flex;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
 
     .meta-chip {
-      font-family: 'DM Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      
+      
       padding: 4px 10px;
-      border-radius: 3px;
-      border: 1px solid var(--border-hi);
+      border-radius: 6px;
+      border: 1px solid var(--border);
       color: var(--muted);
     }
 
     .meta-chip.green {
-      border-color: var(--accent-dim);
-      color: var(--accent);
-      background: rgba(200,240,78,0.06);
+      border-color: #bbf7d0;
+      color: var(--green);
+      background: #f0fdf4;
     }
 
-    .brief-sections { display: flex; flex-direction: column; gap: 32px; }
+    .brief-sections { display: flex; flex-direction: column; gap: 28px; }
 
     .brief-section {
       animation: fadeUp 0.4s ease forwards;
@@ -346,7 +338,7 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -354,76 +346,78 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .section-icon {
-      width: 28px; height: 28px;
-      background: var(--surface);
-      border: 1px solid var(--border-hi);
-      border-radius: 5px;
+      width: 30px; height: 30px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       display: grid;
       place-items: center;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       flex-shrink: 0;
     }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
+      
+      
+      color: var(--text-secondary);
     }
 
-    .section-body { padding-left: 38px; }
+    .section-body { padding-left: 40px; }
 
     .section-body p {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--text);
       margin-bottom: 8px;
       line-height: 1.65;
     }
 
-    .section-body ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .section-body ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 
     .section-body li {
-      font-size: 0.87rem;
+      font-size: 0.88rem;
       color: var(--text);
-      line-height: 1.55;
-      padding-left: 14px;
+      line-height: 1.6;
+      padding-left: 16px;
       position: relative;
     }
 
     .section-body li::before {
-      content: '—';
+      content: '';
       position: absolute;
       left: 0;
-      color: var(--accent-dim);
-      font-size: 0.75rem;
+      top: 10px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--border-hi);
     }
 
     .divider { height: 1px; background: var(--border); margin: 4px 0; }
 
     .error-box {
-      border: 1px solid var(--danger);
-      border-radius: 6px;
-      padding: 16px 18px;
-      background: rgba(255,77,109,0.06);
-      font-size: 0.85rem;
-      color: #ff8fa3;
-      line-height: 1.5;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 18px 20px;
+      background: #fef2f2;
+      font-size: 0.88rem;
+      color: #991b1b;
+      line-height: 1.55;
     }
 
     .error-box strong {
       color: var(--danger);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.06em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.72rem;
+      
       display: block;
       margin-bottom: 4px;
-      text-transform: uppercase;
+      
     }
 
     .export-bar {
@@ -438,23 +432,23 @@
     .btn-export {
       padding: 9px 18px;
       background: transparent;
-      border: 1px solid var(--border-hi);
-      border-radius: 5px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      
+      
       cursor: pointer;
       transition: border-color 0.15s, color 0.15s;
     }
 
-    .btn-export:hover { border-color: var(--accent-dim); color: var(--accent); }
+    .btn-export:hover { border-color: var(--accent); color: var(--accent); }
 
     @media (max-width: 800px) {
       main { grid-template-columns: 1fr; }
       aside { border-right: none; border-bottom: 1px solid var(--border); }
-      .output-panel { padding: 28px 24px; }
+      .output-panel { padding: 28px 20px; }
       header { padding: 14px 20px; }
     }
   </style>
@@ -464,26 +458,21 @@
 
   <header>
     <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 12L7 2L12 12H2Z" fill="#0a0b0d"/>
-        </svg>
-      </div>
       OIF Intelligence
     </div>
-    <div class="badge">Company Brief</div>
+    <div class="header-badge">Company Brief</div>
   </header>
 
   <main>
     <aside>
       <div>
-        <div class="sidebar-title">Company Intelligence<br>Briefer</div>
-        <div class="sidebar-sub">Enter a company name. Get a live research brief in under a minute — sourced from the web in real time.</div>
+        <div class="sidebar-title">Company Intelligence Briefer</div>
+        <div class="sidebar-sub">Enter a company name. Get a live research brief in under a minute, sourced from the web in real time.</div>
       </div>
 
       <div>
         <label>Company Name or URL</label>
-        <input type="text" id="companyInput" placeholder="e.g. Canva, Stripe, Dovetail…" />
+        <input type="text" id="companyInput" placeholder="e.g. Canva, Stripe, Dovetail..." />
       </div>
 
       <div>
@@ -491,23 +480,23 @@
         <div class="toggles" id="toggles">
           <div class="toggle active" data-id="business">
             <div class="toggle-box"></div>
-            <span class="toggle-label">Business model &amp; what they do</span>
+            <span class="toggle-label">Business model & what they do</span>
           </div>
           <div class="toggle active" data-id="team">
             <div class="toggle-box"></div>
-            <span class="toggle-label">Founding team &amp; key people</span>
+            <span class="toggle-label">Founding team & key people</span>
           </div>
           <div class="toggle active" data-id="funding">
             <div class="toggle-box"></div>
-            <span class="toggle-label">Funding history &amp; investors</span>
+            <span class="toggle-label">Funding history & investors</span>
           </div>
           <div class="toggle active" data-id="market">
             <div class="toggle-box"></div>
-            <span class="toggle-label">Competitors &amp; market context</span>
+            <span class="toggle-label">Competitors & market context</span>
           </div>
           <div class="toggle active" data-id="news">
             <div class="toggle-box"></div>
-            <span class="toggle-label">Recent news &amp; signals</span>
+            <span class="toggle-label">Recent news & signals</span>
           </div>
         </div>
       </div>
@@ -521,10 +510,10 @@
       <div class="empty-state" id="emptyState">
         <div class="empty-icon">
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#6b7280" stroke-width="1.2"/>
-            <rect x="12" y="3" width="7" height="7" rx="1.5" stroke="#6b7280" stroke-width="1.2"/>
-            <rect x="3" y="12" width="7" height="7" rx="1.5" stroke="#6b7280" stroke-width="1.2"/>
-            <rect x="12" y="12" width="7" height="7" rx="1.5" stroke="#6b7280" stroke-width="1.2"/>
+            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#9ca3af" stroke-width="1.2"/>
+            <rect x="12" y="3" width="7" height="7" rx="1.5" stroke="#9ca3af" stroke-width="1.2"/>
+            <rect x="3" y="12" width="7" height="7" rx="1.5" stroke="#9ca3af" stroke-width="1.2"/>
+            <rect x="12" y="12" width="7" height="7" rx="1.5" stroke="#9ca3af" stroke-width="1.2"/>
           </svg>
         </div>
         <div class="empty-title">No brief generated yet</div>
@@ -553,11 +542,11 @@
   };
 
   const STEPS = [
-    'Searching the web…',
-    'Reading company sources…',
-    'Pulling funding data…',
-    'Analysing team & market…',
-    'Compiling brief…',
+    'Searching the web...',
+    'Reading company sources...',
+    'Pulling funding data...',
+    'Analysing team & market...',
+    'Compiling brief...',
   ];
 
   async function generate() {
@@ -569,7 +558,7 @@
 
     const btn = document.getElementById('generateBtn');
     btn.disabled = true;
-    btn.textContent = 'Researching…';
+    btn.textContent = 'Researching...';
 
     showLoading();
 
@@ -594,7 +583,6 @@
     }
   }
 
-  // Allow Enter key to trigger generate
   document.getElementById('companyInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') generate();
   });
@@ -665,7 +653,7 @@
     panel.innerHTML = `
       <div class="brief-header">
         <div class="brief-company">${b.company || 'Unknown'}</div>
-        ${b.tagline ? `<div style="color:var(--muted);font-size:0.88rem;margin-top:8px;max-width:560px;line-height:1.5">${b.tagline}</div>` : ''}
+        ${b.tagline ? `<div style="color:var(--text-secondary);font-size:0.9rem;margin-top:8px;max-width:560px;line-height:1.55">${b.tagline}</div>` : ''}
         <div class="brief-meta">${metaHtml}</div>
       </div>
       <div class="brief-sections">
@@ -675,7 +663,7 @@
       <div class="export-bar">
         <button class="btn-export" onclick="copyText()">Copy as Text</button>
         <button class="btn-export" onclick="window.print()">Print / Save PDF</button>
-        <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)">Generated ${ts}</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted)">Generated ${ts}</span>
       </div>`;
 
     window._lastBrief    = b;
@@ -704,7 +692,7 @@
       const data = b.sections?.[id];
       if (!data) return;
       lines.push(cfg.label.toUpperCase());
-      (data.bullets || []).forEach(bul => lines.push(`  — ${bul}`));
+      (data.bullets || []).forEach(bul => lines.push(`  - ${bul}`));
       lines.push('');
     });
     if (b.verdict) { lines.push('ANALYST VERDICT'); lines.push(b.verdict); }
